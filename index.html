@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Süper Menajer 2026 - World Pro Edition</title>
+    <title>Süper Menajer 2026 - Fix Edition</title>
     <style>
         :root {
             --primary: #10b981;
@@ -195,11 +195,15 @@
                 <option value="primeira">🇵🇹 Liga Portugal</option>
                 <option value="saudi">🇸🇦 Saudi Pro League</option>
                 <option value="mls">🇺🇸 MLS</option>
-                <option value="world">🌍 Diğer Dünya Kulüpleri</option>
             </select>
 
             <label><b>Takım Seç:</b></label>
-            <select id="team-select"></select>
+            <select id="team-select">
+                <option value="Galatasaray">Galatasaray</option>
+                <option value="Fenerbahçe">Fenerbahçe</option>
+                <option value="Beşiktaş">Beşiktaş</option>
+                <option value="Trabzonspor">Trabzonspor</option>
+            </select>
 
             <label><b>Forma Göğüs Sponsoru Seç:</b></label>
             <select id="sponsor-select">
@@ -323,21 +327,20 @@
 </div>
 
 <script>
-    const leagueData = {
-        superlig: ["Galatasaray", "Fenerbahçe", "Beşiktaş", "Trabzonspor", "Başakşehir", "Adana Demirspor", "Samsunspor", "Göztepe"],
-        premier: ["Man City", "Arsenal", "Liverpool", "Chelsea", "Man United", "Tottenham", "Aston Villa", "Newcastle"],
-        laliga: ["Real Madrid", "Barcelona", "Atletico Madrid", "Girona", "Athletic Bilbao", "Real Sociedad", "Sevilla", "Betis"],
-        seriea: ["Inter", "AC Milan", "Juventus", "Napoli", "Atalanta", "Roma", "Lazio", "Fiorentina"],
-        bundesliga: ["Bayern München", "Bayer Leverkusen", "Dortmund", "RB Leipzig", "Eintracht Frankfurt", "Stuttgart"],
-        ligue1: ["PSG", "Monaco", "Lille", "Marseille", "Lyon", "Nice"],
-        eredivisie: ["PSV", "Feyenoord", "Ajax", "AZ Alkmaar", "Twente"],
-        primeira: ["Benfica", "Sporting CP", "Porto", "Braga", "Vitoria Guimaraes"],
-        saudi: ["Al-Hilal", "Al-Nassr", "Al-Ittihad", "Al-Ahli", "Al-Ettifaq"],
-        mls: ["Inter Miami", "LA Galaxy", "Columbus Crew", "LAFC", "Seattle Sounders"],
-        world: ["Flamengo", "Palmeiras", "Boca Juniors", "River Plate", "Celtic", "Rangers", "Anderlecht", "Olympiacos"]
+    var leagueData = {
+        superlig: ["Galatasaray", "Fenerbahçe", "Beşiktaş", "Trabzonspor"],
+        premier: ["Man City", "Arsenal", "Liverpool", "Chelsea"],
+        laliga: ["Real Madrid", "Barcelona", "Atletico Madrid", "Girona"],
+        seriea: ["Inter", "AC Milan", "Juventus", "Napoli"],
+        bundesliga: ["Bayern München", "Bayer Leverkusen", "Dortmund", "RB Leipzig"],
+        ligue1: ["PSG", "Monaco", "Lille", "Marseille"],
+        eredivisie: ["PSV", "Feyenoord", "Ajax", "AZ Alkmaar"],
+        primeira: ["Benfica", "Sporting CP", "Porto", "Braga"],
+        saudi: ["Al-Hilal", "Al-Nassr", "Al-Ittihad", "Al-Ahli"],
+        mls: ["Inter Miami", "LA Galaxy", "Columbus Crew", "LAFC"]
     };
 
-    const teamSquads = {
+    var teamSquads = {
         "Galatasaray": [
             { no: 10, name: "Berat ⭐", pos: "OS", rating: 90, energy: 100, status: "Hazır" },
             { no: 11, name: "Niyazi", pos: "SLK", rating: 84, energy: 100, status: "Hazır" },
@@ -352,6 +355,11 @@
             { no: 40, name: "Youssef En-Nesyri", pos: "SNT", rating: 81, energy: 100, status: "Hazır" },
             { no: 40, name: "Dominik Livaković", pos: "KL", rating: 80, energy: 100, status: "Hazır" }
         ],
+        "Beşiktaş": [
+            { no: 17, name: "Ciro Immobile", pos: "SNT", rating: 82, energy: 100, status: "Hazır" },
+            { no: 27, name: "Rafa Silva", pos: "OS", rating: 83, energy: 100, status: "Hazır" },
+            { no: 83, name: "Gedson Fernandes", pos: "OS", rating: 80, energy: 100, status: "Hazır" }
+        ],
         "Real Madrid": [
             { no: 9, name: "Kylian Mbappé", pos: "SNT", rating: 91, energy: 100, status: "Hazır" },
             { no: 7, name: "Vinícius Jr.", pos: "SLK", rating: 90, energy: 100, status: "Hazır" },
@@ -360,59 +368,59 @@
         ]
     };
 
-    const defaultSquad = [
+    var defaultSquad = [
         { no: 10, name: "Kaptan Yıldız", pos: "OS", rating: 84, energy: 100, status: "Hazır" },
         { no: 9, name: "Golcü Santrafor", pos: "SNT", rating: 83, energy: 100, status: "Hazır" },
         { no: 7, name: "Hızlı Kanat", pos: "SLK", rating: 81, energy: 100, status: "Hazır" },
         { no: 1, name: "Güvenilir Kaleci", pos: "KL", rating: 80, energy: 100, status: "Hazır" }
     ];
 
-    let transferMarket = [
+    var transferMarket = [
         { id: 1, name: "Mohamed Salah", pos: "SĞK", rating: 89, price: 28000000 },
         { id: 2, name: "Harry Kane", pos: "SNT", rating: 90, price: 32000000 },
         { id: 3, name: "Ferdi Kadıoğlu", pos: "SLB", rating: 81, price: 10000000 }
     ];
 
-    let myTeam = "";
-    let budget = 25000000;
-    let stadiumCap = 30000;
-    let academyLevel = 1;
-    let currentWeek = 1;
-    let currentTactic = "Dengeli";
-    let teams = [];
-    let squad = [];
+    var myTeam = "";
+    var budget = 25000000;
+    var stadiumCap = 30000;
+    var academyLevel = 1;
+    var currentWeek = 1;
+    var currentTactic = "Dengeli";
+    var teams = [];
+    var squad = [];
 
     function loadTeams() {
-        const leagueSelect = document.getElementById("league-select");
-        const teamSelect = document.getElementById("team-select");
+        var leagueSelect = document.getElementById("league-select");
+        var teamSelect = document.getElementById("team-select");
         if (!leagueSelect || !teamSelect) return;
 
-        const selectedLeague = leagueSelect.value;
+        var selectedLeague = leagueSelect.value;
         teamSelect.innerHTML = "";
         
-        const currentTeams = leagueData[selectedLeague] || leagueData["superlig"];
+        var currentTeams = leagueData[selectedLeague] || leagueData["superlig"];
         
-        currentTeams.forEach(team => {
-            const option = document.createElement("option");
-            option.value = team;
-            option.textContent = team;
-            teamSelect.appendChild(option);
-        });
+        for (var i = 0; i < currentTeams.length; i++) {
+            var opt = document.createElement("option");
+            opt.value = currentTeams[i];
+            opt.innerHTML = currentTeams[i];
+            teamSelect.appendChild(opt);
+        }
     }
 
     function startGame() {
-        const teamSelect = document.getElementById("team-select");
+        var teamSelect = document.getElementById("team-select");
         if (!teamSelect || !teamSelect.value) {
             alert("Lütfen bir takım seçin!");
             return;
         }
 
         myTeam = teamSelect.value;
-        const league = document.getElementById("league-select").value;
-        const sponsor = document.getElementById("sponsor-select").value;
+        var league = document.getElementById("league-select").value;
+        var sponsor = document.getElementById("sponsor-select").value;
 
-        if(sponsor.includes("10M")) budget += 10000000;
-        else if(sponsor.includes("8M")) budget += 8000000;
+        if(sponsor.indexOf("10M") !== -1) budget += 10000000;
+        else if(sponsor.indexOf("8M") !== -1) budget += 8000000;
         else budget += 7000000;
 
         if (teamSquads[myTeam]) {
@@ -421,11 +429,10 @@
             squad = JSON.parse(JSON.stringify(defaultSquad));
         }
 
-        const currentLeagueList = leagueData[league] || leagueData["superlig"];
-        teams = currentLeagueList.slice(0, 4).map(t => ({ name: t, points: 0, played: 0, won: 0, drawn: 0, lost: 0 }));
-
-        if (!teams.find(t => t.name === myTeam)) {
-            teams[0] = { name: myTeam, points: 0, played: 0, won: 0, drawn: 0, lost: 0 };
+        var currentLeagueList = leagueData[league] || leagueData["superlig"];
+        teams = [];
+        for (var i = 0; i < currentLeagueList.length; i++) {
+            teams.push({ name: currentLeagueList[i], points: 0, played: 0, won: 0, drawn: 0, lost: 0 });
         }
 
         document.getElementById("user-team-name").innerText = myTeam;
@@ -441,12 +448,18 @@
     }
 
     function switchTab(tabId) {
-        ['newspaper-tab', 'squad-tab', 'transfer-tab', 'facilities-tab', 'league-tab'].forEach(id => {
-            document.getElementById(id).classList.add('hidden');
-        });
+        var tabs = ['newspaper-tab', 'squad-tab', 'transfer-tab', 'facilities-tab', 'league-tab'];
+        for(var i=0; i<tabs.length; i++) {
+            document.getElementById(tabs[i]).classList.add('hidden');
+        }
         document.getElementById(tabId).classList.remove('hidden');
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
+        var btns = document.querySelectorAll('.tab-btn');
+        for(var j=0; j<btns.length; j++) {
+            btns[j].classList.remove('active');
+        }
+        if(event && event.target) {
+            event.target.classList.add('active');
+        }
     }
 
     function updateUI() {
@@ -455,8 +468,4 @@
         document.getElementById("news-week").innerText = currentWeek;
         document.getElementById("stadium-cap").innerText = stadiumCap.toLocaleString('tr-TR');
         document.getElementById("stadium-val").innerText = stadiumCap.toLocaleString('tr-TR');
-        document.getElementById("academy-level").innerText = "Seviye " + academyLevel;
-
-        let squadHTML = "";
-        squad.forEach(p => {
-            squadHTML += `<tr><td>${
+        document.get
