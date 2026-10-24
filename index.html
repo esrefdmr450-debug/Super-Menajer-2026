@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Süper Menajer 2026 - Güncel Kadro Edition</title>
+    <title>Süper Menajer 2026 - World Pro Edition</title>
     <style>
         :root {
             --primary: #10b981;
@@ -185,16 +185,17 @@
             
             <label><b>Lig Seç:</b></label>
             <select id="league-select" onchange="loadTeams()">
-                <option value="superlig">🇹🇷 Süper Lig (Türkiye)</option>
-                <option value="premier">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League (İngiltere)</option>
-                <option value="laliga">🇪🇸 La Liga (İspanya)</option>
-                <option value="seriea">🇮🇹 Serie A (İtalya)</option>
-                <option value="bundesliga">🇩🇪 Bundesliga (Almanya)</option>
-                <option value="ligue1">🇫🇷 Ligue 1 (Fransa)</option>
-                <option value="eredivisie">🇳🇱 Eredivisie (Hollanda)</option>
-                <option value="primeira">🇵🇹 Primeira Liga (Portekiz)</option>
-                <option value="saudi">🇸🇦 Saudi Pro League (Suudi Arabistan)</option>
-                <option value="mls">🇺🇸 MLS (ABD)</option>
+                <option value="superlig">🇹🇷 Trendyol Süper Lig</option>
+                <option value="premier">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League</option>
+                <option value="laliga">🇪🇸 La Liga</option>
+                <option value="seriea">🇮🇹 Serie A</option>
+                <option value="bundesliga">🇩🇪 Bundesliga</option>
+                <option value="ligue1">🇫🇷 Ligue 1</option>
+                <option value="eredivisie">🇳🇱 Eredivisie</option>
+                <option value="primeira">🇵🇹 Liga Portugal</option>
+                <option value="saudi">🇸🇦 Saudi Pro League</option>
+                <option value="mls">🇺🇸 MLS</option>
+                <option value="world">🌍 Diğer Dünya Kulüpleri</option>
             </select>
 
             <label><b>Takım Seç:</b></label>
@@ -242,7 +243,7 @@
                 <h3>📰 WSC FOOTBALL DAILY</h3>
                 <div class="newspaper-date">Hafta <span id="news-week">1</span> Özel Baskısı</div>
                 <h4 id="news-headline" style="margin: 5px 0; font-size:17px; color:#1e1b4b;">SEZON BAŞLADI!</h4>
-                <p id="news-body" style="font-size:13px; line-height:1.5;">Gözler güncellenen dev kadrolarda! Galatasaray'da 90 reytingli yıldız Berat ve Niyazi sezona damga vurmaya hazır!</p>
+                <p id="news-body" style="font-size:13px; line-height:1.5;">Gözler güncellenen kadrolarda! Galatasaray'da 90 reytingli yıldız Berat ve Niyazi sezona damga vurmaya hazır!</p>
             </div>
 
             <!-- Taktik Seçimi -->
@@ -322,89 +323,54 @@
 </div>
 
 <script>
-    let leagueData = {
-        superlig: ["Galatasaray", "Fenerbahçe", "Beşiktaş", "Trabzonspor"],
-        premier: ["Man City", "Arsenal", "Liverpool", "Chelsea"],
-        laliga: ["Real Madrid", "Barcelona", "Atletico Madrid", "Girona"],
-        seriea: ["Inter", "AC Milan", "Juventus", "Napoli"],
-        bundesliga: ["Bayern München", "Bayer Leverkusen", "Dortmund", "RB Leipzig"],
-        ligue1: ["PSG", "Monaco", "Lille", "Marseille"],
-        eredivisie: ["PSV", "Feyenoord", "Ajax", "AZ Alkmaar"],
-        primeira: ["Benfica", "Sporting CP", "Porto", "Braga"],
-        saudi: ["Al-Hilal", "Al-Nassr", "Al-Ittihad", "Al-Ahli"],
-        mls: ["Inter Miami", "LA Galaxy", "Columbus Crew", "LAFC"]
+    const leagueData = {
+        superlig: ["Galatasaray", "Fenerbahçe", "Beşiktaş", "Trabzonspor", "Başakşehir", "Adana Demirspor", "Samsunspor", "Göztepe"],
+        premier: ["Man City", "Arsenal", "Liverpool", "Chelsea", "Man United", "Tottenham", "Aston Villa", "Newcastle"],
+        laliga: ["Real Madrid", "Barcelona", "Atletico Madrid", "Girona", "Athletic Bilbao", "Real Sociedad", "Sevilla", "Betis"],
+        seriea: ["Inter", "AC Milan", "Juventus", "Napoli", "Atalanta", "Roma", "Lazio", "Fiorentina"],
+        bundesliga: ["Bayern München", "Bayer Leverkusen", "Dortmund", "RB Leipzig", "Eintracht Frankfurt", "Stuttgart"],
+        ligue1: ["PSG", "Monaco", "Lille", "Marseille", "Lyon", "Nice"],
+        eredivisie: ["PSV", "Feyenoord", "Ajax", "AZ Alkmaar", "Twente"],
+        primeira: ["Benfica", "Sporting CP", "Porto", "Braga", "Vitoria Guimaraes"],
+        saudi: ["Al-Hilal", "Al-Nassr", "Al-Ittihad", "Al-Ahli", "Al-Ettifaq"],
+        mls: ["Inter Miami", "LA Galaxy", "Columbus Crew", "LAFC", "Seattle Sounders"],
+        world: ["Flamengo", "Palmeiras", "Boca Juniors", "River Plate", "Celtic", "Rangers", "Anderlecht", "Olympiacos"]
     };
 
-    // Tüm Güncel Kadro Veritabanı
-    let teamSquads = {
+    const teamSquads = {
         "Galatasaray": [
             { no: 10, name: "Berat ⭐", pos: "OS", rating: 90, energy: 100, status: "Hazır" },
             { no: 11, name: "Niyazi", pos: "SLK", rating: 84, energy: 100, status: "Hazır" },
             { no: 9, name: "Victor Osimhen", pos: "SNT", rating: 88, energy: 100, status: "Hazır" },
             { no: 10, name: "Mauro Icardi", pos: "SNT", rating: 83, energy: 100, status: "Hazır" },
             { no: 1, name: "Fernando Muslera", pos: "KL", rating: 82, energy: 100, status: "Hazır" },
-            { no: 6, name: "Lucas Torreira", pos: "DOS", rating: 82, energy: 100, status: "Hazır" },
-            { no: 20, name: "Gabriel Sara", pos: "OS", rating: 81, energy: 100, status: "Hazır" },
-            { no: 53, name: "Barış Alper Yılmaz", pos: "SĞK", rating: 81, energy: 100, status: "Hazır" }
+            { no: 6, name: "Lucas Torreira", pos: "DOS", rating: 82, energy: 100, status: "Hazır" }
         ],
         "Fenerbahçe": [
             { no: 9, name: "Edin Džeko", pos: "SNT", rating: 82, energy: 100, status: "Hazır" },
             { no: 10, name: "Dusan Tadić", pos: "SLK", rating: 82, energy: 100, status: "Hazır" },
-            { no: 5, name: "Ismail Yüksek", pos: "DOS", rating: 79, energy: 100, status: "Hazır" },
             { no: 40, name: "Youssef En-Nesyri", pos: "SNT", rating: 81, energy: 100, status: "Hazır" },
-            { no: 4, name: "Sofyan Amrabat", pos: "DOS", rating: 80, energy: 100, status: "Hazır" },
             { no: 40, name: "Dominik Livaković", pos: "KL", rating: 80, energy: 100, status: "Hazır" }
-        ],
-        "Beşiktaş": [
-            { no: 17, name: "Ciro Immobile", pos: "SNT", rating: 82, energy: 100, status: "Hazır" },
-            { no: 27, name: "Rafa Silva", pos: "OS", rating: 83, energy: 100, status: "Hazır" },
-            { no: 83, name: "Gedson Fernandes", pos: "OS", rating: 80, energy: 100, status: "Hazır" },
-            { no: 71, name: "Milot Rashica", pos: "SĞK", rating: 78, energy: 100, status: "Hazır" },
-            { no: 34, name: "Mert Günok", pos: "KL", rating: 79, energy: 100, status: "Hazır" }
         ],
         "Real Madrid": [
             { no: 9, name: "Kylian Mbappé", pos: "SNT", rating: 91, energy: 100, status: "Hazır" },
             { no: 7, name: "Vinícius Jr.", pos: "SLK", rating: 90, energy: 100, status: "Hazır" },
             { no: 5, name: "Jude Bellingham", pos: "OS", rating: 90, energy: 100, status: "Hazır" },
-            { no: 15, name: "Arda Güler", pos: "OS", rating: 82, energy: 100, status: "Hazır" },
-            { no: 1, name: "Thibaut Courtois", pos: "KL", rating: 89, energy: 100, status: "Hazır" }
-        ],
-        "Man City": [
-            { no: 9, name: "Erling Haaland", pos: "SNT", rating: 91, energy: 100, status: "Hazır" },
-            { no: 17, name: "Kevin De Bruyne", pos: "OS", rating: 90, energy: 100, status: "Hazır" },
-            { no: 16, name: "Rodri", pos: "DOS", rating: 91, energy: 100, status: "Hazır" },
-            { no: 47, name: "Phil Foden", pos: "SĞK", rating: 88, energy: 100, status: "Hazır" }
-        ],
-        "Barcelona": [
-            { no: 9, name: "Robert Lewandowski", pos: "SNT", rating: 88, energy: 100, status: "Hazır" },
-            { no: 19, name: "Lamine Yamal", pos: "SĞK", rating: 87, energy: 100, status: "Hazır" },
-            { no: 11, name: "Raphinha", pos: "SLK", rating: 86, energy: 100, status: "Hazır" },
-            { no: 8, name: "Pedri", pos: "OS", rating: 86, energy: 100, status: "Hazır" }
-        ],
-        "Inter Miami": [
-            { no: 10, name: "Lionel Messi", pos: "SĞK", rating: 88, energy: 100, status: "Hazır" },
-            { no: 9, name: "Luis Suárez", pos: "SNT", rating: 82, energy: 100, status: "Hazır" },
-            { no: 5, name: "Sergio Busquets", pos: "DOS", rating: 80, energy: 100, status: "Hazır" }
-        ],
-        "Al-Nassr": [
-            { no: 7, name: "Cristiano Ronaldo", pos: "SNT", rating: 86, energy: 100, status: "Hazır" },
-            { no: 10, name: "Sadio Mané", pos: "SLK", rating: 83, energy: 100, status: "Hazır" },
-            { no: 25, name: "Otávio", pos: "OS", rating: 81, energy: 100, status: "Hazır" }
+            { no: 15, name: "Arda Güler", pos: "OS", rating: 82, energy: 100, status: "Hazır" }
         ]
     };
 
-    let defaultSquad = [
-        { no: 10, name: "Yıldız Oyuncu 1", pos: "OS", rating: 84, energy: 100, status: "Hazır" },
-        { no: 9, name: "Yıldız Oyuncu 2", pos: "SNT", rating: 83, energy: 100, status: "Hazır" },
-        { no: 7, name: "Yıldız Oyuncu 3", pos: "SLK", rating: 81, energy: 100, status: "Hazır" },
-        { no: 1, name: "Kaleci A", pos: "KL", rating: 80, energy: 100, status: "Hazır" }
+    const defaultSquad = [
+        { no: 10, name: "Kaptan Yıldız", pos: "OS", rating: 84, energy: 100, status: "Hazır" },
+        { no: 9, name: "Golcü Santrafor", pos: "SNT", rating: 83, energy: 100, status: "Hazır" },
+        { no: 7, name: "Hızlı Kanat", pos: "SLK", rating: 81, energy: 100, status: "Hazır" },
+        { no: 1, name: "Güvenilir Kaleci", pos: "KL", rating: 80, energy: 100, status: "Hazır" }
     ];
 
     let transferMarket = [
         { id: 1, name: "Mohamed Salah", pos: "SĞK", rating: 89, price: 28000000 },
         { id: 2, name: "Harry Kane", pos: "SNT", rating: 90, price: 32000000 },
-        { id: 3, name: "Ferdi Kadıoğlu", pos: "SLB", rating: 81, price: 10000000 },
-        { id: 4, name: "Lautaro Martínez", pos: "SNT", rating: 88, price: 24000000 }
+        { id: 3, name: "Ferdi Kadıoğlu", pos: "SLB", rating: 81, price: 10000000 }
     ];
 
     let myTeam = "";
@@ -417,32 +383,80 @@
     let squad = [];
 
     function loadTeams() {
-        let league = document.getElementById("league-select").value;
-        let select = document.getElementById("team-select");
-        select.innerHTML = "";
+        const leagueSelect = document.getElementById("league-select");
+        const teamSelect = document.getElementById("team-select");
+        if (!leagueSelect || !teamSelect) return;
+
+        const selectedLeague = leagueSelect.value;
+        teamSelect.innerHTML = "";
         
-        if (leagueData[league]) {
-            leagueData[league].forEach(t => {
-                select.innerHTML += `<option value="${t}">${t}</option>`;
-            });
-        }
+        const currentTeams = leagueData[selectedLeague] || leagueData["superlig"];
+        
+        currentTeams.forEach(team => {
+            const option = document.createElement("option");
+            option.value = team;
+            option.textContent = team;
+            teamSelect.appendChild(option);
+        });
     }
 
     function startGame() {
-        let teamSelect = document.getElementById("team-select");
-        if (!teamSelect.value) {
+        const teamSelect = document.getElementById("team-select");
+        if (!teamSelect || !teamSelect.value) {
             alert("Lütfen bir takım seçin!");
             return;
         }
 
         myTeam = teamSelect.value;
-        let league = document.getElementById("league-select").value;
-        let sponsor = document.getElementById("sponsor-select").value;
+        const league = document.getElementById("league-select").value;
+        const sponsor = document.getElementById("sponsor-select").value;
 
         if(sponsor.includes("10M")) budget += 10000000;
         else if(sponsor.includes("8M")) budget += 8000000;
         else budget += 7000000;
 
-        // Kadroyu Yükle
         if (teamSquads[myTeam]) {
-            squad = JSON.parse(JSON.stringify(te
+            squad = JSON.parse(JSON.stringify(teamSquads[myTeam]));
+        } else {
+            squad = JSON.parse(JSON.stringify(defaultSquad));
+        }
+
+        const currentLeagueList = leagueData[league] || leagueData["superlig"];
+        teams = currentLeagueList.slice(0, 4).map(t => ({ name: t, points: 0, played: 0, won: 0, drawn: 0, lost: 0 }));
+
+        if (!teams.find(t => t.name === myTeam)) {
+            teams[0] = { name: myTeam, points: 0, played: 0, won: 0, drawn: 0, lost: 0 };
+        }
+
+        document.getElementById("user-team-name").innerText = myTeam;
+        document.getElementById("sponsor-name").innerText = "Sponsor: " + sponsor.split(" ")[0];
+        document.getElementById("setup-screen").classList.add("hidden");
+        document.getElementById("game-screen").classList.remove("hidden");
+        updateUI();
+    }
+
+    function setTactic(t) {
+        currentTactic = t;
+        document.getElementById("current-tactic").innerText = "Seçili Taktik: " + t;
+    }
+
+    function switchTab(tabId) {
+        ['newspaper-tab', 'squad-tab', 'transfer-tab', 'facilities-tab', 'league-tab'].forEach(id => {
+            document.getElementById(id).classList.add('hidden');
+        });
+        document.getElementById(tabId).classList.remove('hidden');
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+    }
+
+    function updateUI() {
+        document.getElementById("budget").innerText = budget.toLocaleString('tr-TR');
+        document.getElementById("week").innerText = currentWeek;
+        document.getElementById("news-week").innerText = currentWeek;
+        document.getElementById("stadium-cap").innerText = stadiumCap.toLocaleString('tr-TR');
+        document.getElementById("stadium-val").innerText = stadiumCap.toLocaleString('tr-TR');
+        document.getElementById("academy-level").innerText = "Seviye " + academyLevel;
+
+        let squadHTML = "";
+        squad.forEach(p => {
+            squadHTML += `<tr><td>${
