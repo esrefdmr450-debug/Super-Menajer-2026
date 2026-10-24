@@ -1,1 +1,182 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Süper Menajer 2026</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a2e; color: #fff; margin: 0; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; background: #16213e; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+    h1, h2 { text-align: center; color: #e94560; margin-bottom: 20px; }
+    .btn { background: #e94560; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 10px; font-weight: bold; }
+    .btn:hover { background: #0f3460; }
+    .card { background: #0f3460; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #1a1a2e; padding: 8px; text-align: center; }
+    th { background-color: #e94560; }
+    .hidden { display: none; }
+    .badge { background: #e94560; padding: 3px 8px; border-radius: 4px; font-size: 12px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>⚽ Süper Menajer 2026 ⚽</h1>
+
+  <!-- Takım Seçim Ekranı -->
+  <div id="setup-screen">
+    <h2>Takımını Seç</h2>
+    <div class="card">
+      <label for="team-select">Yöneteceğin Takımı Seç:</label>
+      <select id="team-select" style="width: 100%; padding: 10px; margin-top: 10px; font-size: 16px;">
+        <option value="Galatasaray">Galatasaray (Güç: 83)</option>
+        <option value="Fenerbahçe">Fenerbahçe (Güç: 82)</option>
+        <option value="Beşiktaş">Beşiktaş (Güç: 79)</option>
+        <option value="Trabzonspor">Trabzonspor (Güç: 77)</option>
+      </select>
+      <button class="btn" onclick="startGame()">Kariyere Başla</button>
+    </div>
+  </div>
+
+  <!-- Ana Oyun Paneli -->
+  <div id="game-screen" class="hidden">
+    <div class="card">
+      <h2 id="user-team-name">Takımım</h2>
+      <p><strong>Bütçe:</strong> <span id="budget">15.000.000</span> €</p>
+      <p><strong>Hafta:</strong> <span id="week">1</span> / 6</p>
+    </div>
+
+    <!-- Kadro -->
+    <div class="card">
+      <h3>Takım Kadrosu</h3>
+      <table>
+        <thead>
+          <tr><th>No</th><th>Oyuncu</th><th>Mevki</th><th>Reyting</th></tr>
+        </thead>
+        <tbody id="squad-table"></tbody>
+      </table>
+    </div>
+
+    <!-- Maç Oyna ve Puan Durumu -->
+    <button class="btn" id="match-btn" onclick="playWeek()">Haftanın Maçını Oyna</button>
+
+    <div class="card" style="margin-top: 15px;">
+      <h3>Puan Durumu</h3>
+      <table>
+        <thead>
+          <tr><th>Takım</th><th>O</th><th>G</th><th>B</th><th>M</th><th>P</th></tr>
+        </thead>
+        <tbody id="league-table"></tbody>
+      </table>
+    </div>
+
+    <div id="match-results" class="card hidden">
+      <h3>Maç Sonuçları</h3>
+      <div id="results-list"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const teamsData = {
+    "Galatasaray": {
+      power: 83, budget: 20000000, points: 0, played: 0, won: 0, drawn: 0, lost: 0,
+      squad: [
+        { no: 1, name: "Muslera", pos: "GK", rating: 80 },
+        { no: 11, name: "Niyazi", pos: "LW", rating: 84 },
+        { no: 9, name: "Icardi", pos: "ST", rating: 83 },
+        { no: 34, name: "Torreira", pos: "CM", rating: 82 },
+        { no: 6, name: "Davinson", pos: "CB", rating: 81 }
+      ]
+    },
+    "Fenerbahçe": {
+      power: 82, budget: 18000000, points: 0, played: 0, won: 0, drawn: 0, lost: 0,
+      squad: [{ no: 9, name: "Dzeko", pos: "ST", rating: 82 }]
+    },
+    "Beşiktaş": {
+      power: 79, budget: 12000000, points: 0, played: 0, won: 0, drawn: 0, lost: 0,
+      squad: [{ no: 17, name: "Immobile", pos: "ST", rating: 81 }]
+    },
+    "Trabzonspor": {
+      power: 77, budget: 8000000, points: 0, played: 0, won: 0, drawn: 0, lost: 0,
+      squad: [{ no: 9, name: "Banza", pos: "ST", rating: 78 }]
+    }
+  };
+
+  let userTeam = "";
+  let currentWeek = 1;
+
+  function startGame() {
+    userTeam = document.getElementById("team-select").value;
+    document.getElementById("setup-screen").classList.add("hidden");
+    document.getElementById("game-screen").classList.remove("hidden");
+    document.getElementById("user-team-name").innerText = userTeam + " Menajerliği";
+    document.getElementById("budget").innerText = teamsData[userTeam].budget.toLocaleString();
+    
+    renderSquad();
+    renderTable();
+  }
+
+  function renderSquad() {
+    const tbody = document.getElementById("squad-table");
+    tbody.innerHTML = "";
+    const squad = teamsData[userTeam].squad;
+    squad.forEach(p => {
+      tbody.innerHTML += `<tr><td>${p.no}</td><td>${p.name}</td><td>${p.pos}</td><td><span class="badge">${p.rating}</span></td></tr>`;
+    });
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById("league-table");
+    tbody.innerHTML = "";
+    const sorted = Object.keys(teamsData).sort((a,b) => teamsData[b].points - teamsData[a].points);
+    sorted.forEach(t => {
+      const d = teamsData[t];
+      tbody.innerHTML += `<tr><td><strong>${t}</strong></td><td>${d.played}</td><td>${d.won}</td><td>${d.drawn}</td><td>${d.lost}</td><td><strong>${d.points}</strong></td></tr>`;
+    });
+  }
+
+  function playWeek() {
+    if (currentWeek > 6) return alert("Sezon Bitti!");
+
+    let resultsHTML = "";
+    const teamNames = Object.keys(teamsData);
+
+    for (let i = 0; i < teamNames.length; i += 2) {
+      let t1 = teamNames[i];
+      let t2 = teamNames[i+1];
+
+      let score1 = Math.floor(Math.random() * 3) + (teamsData[t1].power > teamsData[t2].power ? 1 : 0);
+      let score2 = Math.floor(Math.random() * 3) + (teamsData[t2].power > teamsData[t1].power ? 1 : 0);
+
+      teamsData[t1].played++; teamsData[t2].played++;
+
+      if (score1 > score2) {
+        teamsData[t1].points += 3; teamsData[t1].won++; teamsData[t2].lost++;
+      } else if (score2 > score1) {
+        teamsData[t2].points += 3; teamsData[t2].won++; teamsData[t1].lost++;
+      } else {
+        teamsData[t1].points += 1; teamsData[t2].points += 1;
+        teamsData[t1].drawn++; teamsData[t2].drawn++;
+      }
+
+      resultsHTML += `<p><strong>${t1} ${score1} - ${score2} ${t2}</strong></p>`;
+    }
+
+    document.getElementById("match-results").classList.remove("hidden");
+    document.getElementById("results-list").innerHTML = resultsHTML;
+
+    currentWeek++;
+    if (currentWeek <= 6) {
+      document.getElementById("week").innerText = currentWeek;
+    } else {
+      document.getElementById("match-btn").disabled = true;
+      document.getElementById("match-btn").innerText = "Sezon Tamamlandı";
+    }
+
+    renderTable();
+  }
+</script>
+</body>
+  </html>
 
