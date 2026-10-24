@@ -1,466 +1,189 @@
 <!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Süper Menajer 2026 - World Edition</title>
-    <style>
-        :root {
-            --primary: #10b981;
-            --primary-dark: #059669;
-            --bg-dark: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.85);
-            --border: #334155;
-            --accent: #f59e0b;
-            --danger: #ef4444;
-            --text: #f8fafc;
-        }
-
-        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
-        
-        body { 
-            background: linear-gradient(135deg, #0b132b 0%, #1c2541 100%); 
-            color: var(--text); 
-            min-height: 100vh;
-            padding: 15px; 
-        }
-
-        .container { 
-            max-width: 650px; 
-            margin: 0 auto; 
-            background: rgba(15, 23, 42, 0.95); 
-            padding: 20px; 
-            border-radius: 16px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        h1 { 
-            text-align: center; 
-            color: var(--primary); 
-            font-size: 26px; 
-            font-weight: 800; 
-            margin-bottom: 20px; 
-            text-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
-            letter-spacing: 1px;
-        }
-
-        h2, h3 { color: var(--text); margin-bottom: 12px; }
-
-        select, input { 
-            width: 100%; 
-            padding: 12px; 
-            margin: 8px 0 16px 0; 
-            border-radius: 10px; 
-            background: #1e293b; 
-            color: #fff; 
-            border: 1px solid var(--border); 
-            font-size: 14px; 
-            outline: none;
-            transition: all 0.3s;
-        }
-        select:focus { border-color: var(--primary); box-shadow: 0 0 8px rgba(16, 185, 129, 0.4); }
-
-        .btn { 
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
-            color: white; 
-            border: none; 
-            padding: 12px 18px; 
-            font-size: 14px; 
-            font-weight: 700; 
-            border-radius: 10px; 
-            cursor: pointer; 
-            width: 100%; 
-            margin-top: 8px; 
-            transition: transform 0.2s, box-shadow 0.2s; 
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-        .btn:active { transform: scale(0.98); }
-        .btn:hover { box-shadow: 0 6px 16px rgba(16, 185, 129, 0.5); }
-
-        .btn-warning { 
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); 
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
-        }
-        .btn-danger { 
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); 
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-        }
-
-        .card { 
-            background: var(--card-bg); 
-            padding: 18px; 
-            border-radius: 12px; 
-            margin-bottom: 16px; 
-            border: 1px solid var(--border); 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .newspaper { 
-            background: #fef3c7; 
-            color: #1e1b4b; 
-            padding: 18px; 
-            border-radius: 8px; 
-            font-family: 'Georgia', serif; 
-            border: 2px solid #78350f; 
-            margin-bottom: 16px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        .newspaper h3 { 
-            font-family: 'Georgia', serif; 
-            color: #78350f; 
-            border-bottom: 2px dashed #78350f; 
-            padding-bottom: 6px; 
-            text-transform: uppercase; 
-            margin-top: 0; 
-            text-align: center; 
-            letter-spacing: 1px;
-        }
-        .newspaper-date { font-size: 12px; font-style: italic; text-align: right; margin-bottom: 10px; color: #92400e; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        th, td { border-bottom: 1px solid var(--border); padding: 10px 8px; text-align: center; }
-        th { background-color: rgba(15, 23, 42, 0.8); color: var(--primary); font-weight: 700; }
-        tr:hover { background-color: rgba(255, 255, 255, 0.03); }
-
-        .hidden { display: none; }
-
-        .tab-menu { display: flex; gap: 6px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
-        .tab-btn { 
-            flex: 1; 
-            padding: 10px 14px; 
-            background: #1e293b; 
-            color: #94a3b8; 
-            border: 1px solid var(--border); 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: 600; 
-            white-space: nowrap; 
-            font-size: 12px; 
-            transition: all 0.3s;
-        }
-        .tab-btn.active { 
-            background: var(--primary); 
-            color: #fff; 
-            border-color: var(--primary); 
-            box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
-        }
-
-        .match-log { 
-            background: #020617; 
-            color: #22c55e; 
-            padding: 12px; 
-            height: 150px; 
-            overflow-y: auto; 
-            font-family: 'Courier New', monospace; 
-            border-radius: 8px; 
-            margin-top: 10px; 
-            font-size: 13px; 
-            border: 1px solid #1e293b;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
-        }
-
-        .tactics-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 10px; }
-        
-        .badge {
-            background: var(--primary);
-            color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h1>⚽ SÜPER MENAJER 2026</h1>
-
-    <!-- Kurulum Ekranı -->
-    <div id="setup-screen">
-        <div class="card">
-            <h2 style="text-align:center; color: var(--primary);">🎮 Kariyer Kurulumu</h2>
-            
-            <label><b>Lig Seç:</b></label>
-            <select id="league-select" onchange="loadTeams()">
-                <option value="superlig">🇹🇷 Trendyol Süper Lig</option>
-                <option value="premier">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League</option>
-                <option value="laliga">🇪🇸 La Liga</option>
-                <option value="seriea">🇮🇹 Serie A</option>
-                <option value="bundesliga">🇩🇪 Bundesliga</option>
-                <option value="ligue1">🇫🇷 Ligue 1</option>
-                <option value="eredivisie">🇳🇱 Eredivisie</option>
-                <option value="primeira">🇵🇹 Liga Portugal</option>
-                <option value="saudi">🇸🇦 Saudi Pro League</option>
-                <option value="mls">🇺🇸 MLS</option>
-            </select>
-
-            <label><b>Takım Seç:</b></label>
-            <select id="team-select">
-                <!-- Dinamik yüklenecek -->
-            </select>
-
-            <label><b>Forma Göğüs Sponsoru Seç:</b></label>
-            <select id="sponsor-select">
-                <option value="Turkish Airlines">Turkish Airlines (+10M € Bütçe)</option>
-                <option value="Puma">Puma (+8M € Bütçe)</option>
-                <option value="Beko">Beko (+7M € Bütçe)</option>
-            </select>
-
-            <button class="btn" onclick="startGame()">🚀 Kariyere Başla</button>
-        </div>
-    </div>
-
-    <!-- Ana Oyun Ekranı -->
-    <div id="game-screen" class="hidden">
-        
-        <!-- Bütçe ve Durum Kartı -->
-        <div class="card" style="display:flex; justify-content:space-between; align-items:center; border-left: 4px solid var(--primary);">
-            <div>
-                <h3 id="user-team-name" style="margin:0; text-align:left; color: var(--primary);">Takım</h3>
-                <small>Bütçe: <span id="budget" style="color:var(--primary); font-weight:bold;">25.000.000</span> €</small><br>
-                <small>Stadyum: <span id="stadium-cap">30.000</span> Koltuk</small>
-            </div>
-            <div style="text-align:right;">
-                <span style="font-size:16px; font-weight:bold;">Hafta: <span id="week" style="color:var(--accent);">1</span>/6</span><br>
-                <small id="sponsor-name" style="color:var(--accent); font-weight:600;"></small>
-            </div>
-        </div>
-
-        <!-- Tab Menüsü -->
-        <div class="tab-menu">
-            <button class="tab-btn active" onclick="switchTab('newspaper-tab')">📰 Gazete</button>
-            <button class="tab-btn" onclick="switchTab('squad-tab')">👕 Kadro</button>
-            <button class="tab-btn" onclick="switchTab('transfer-tab')">🔄 Transfer</button>
-            <button class="tab-btn" onclick="switchTab('facilities-tab')">🏟️ Tesisler</button>
-            <button class="tab-btn" onclick="switchTab('league-tab')">🏆 Lig</button>
-        </div>
-
-        <!-- SEKME 1: Gazete & Maç -->
-        <div id="newspaper-tab">
-            <div class="newspaper">
-                <h3>📰 WSC FOOTBALL DAILY</h3>
-                <div class="newspaper-date">Hafta <span id="news-week">1</span> Özel Baskısı</div>
-                <h4 id="news-headline" style="margin: 5px 0; font-size:17px; color:#1e1b4b;">SEZON BAŞLADI!</h4>
-                <p id="news-body" style="font-size:13px; line-height:1.5;">Dünyanın dört bir yanında heyecan başladı! Galatasaray'da Berat (90) ve Niyazi fırtına estirmeye hazırlanıyor!</p>
-            </div>
-
-            <!-- Taktik Seçimi -->
-            <div class="card">
-                <label><b>Maç İçi Taktiği:</b></label>
-                <div class="tactics-grid">
-                    <button class="btn" onclick="setTactic('Defans')">🛡️ Otobüs</button>
-                    <button class="btn btn-warning" onclick="setTactic('Dengeli')">⚖️ Dengeli</button>
-                    <button class="btn btn-danger" onclick="setTactic('Hücum')">⚔️ Tam Hücum</button>
-                </div>
-                <small id="current-tactic" style="display:block; text-align:center; margin-top:8px; color:#94a3b8;">Seçili Taktik: Dengeli</small>
-            </div>
-
-            <button class="btn" style="font-size:16px; padding:14px;" onclick="playWeek()">⚽ HAFTANIN MAÇINI OYNA</button>
-            
-            <div id="match-sim" class="hidden" style="margin-top:15px;">
-                <div class="card" style="text-align:center; background:#020617; border: 1px solid var(--primary);">
-                    <small style="color:#94a3b8; text-transform:uppercase; letter-spacing:1px;">Canlı Maç Skoru</small>
-                    <div id="match-score" style="font-size:32px; font-weight:800; color:var(--primary); margin:8px 0; font-family:monospace;">0 - 0</div>
-                </div>
-                <div class="match-log" id="match-log"></div>
-            </div>
-        </div>
-
-        <!-- SEKME 2: Kadro -->
-        <div id="squad-tab" class="hidden">
-            <div class="card">
-                <h3>👕 Takım Kadrosu</h3>
-                <table>
-                    <thead>
-                        <tr><th>No</th><th>Oyuncu</th><th>Mevki</th><th>Reyting</th><th>Enerji</th><th>Durum</th></tr>
-                    </thead>
-                    <tbody id="squad-table"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- SEKME 3: Transfer -->
-        <div id="transfer-tab" class="hidden">
-            <div class="card">
-                <h3>🔄 Transfer Pazarı</h3>
-                <table>
-                    <thead>
-                        <tr><th>Oyuncu</th><th>Mevki</th><th>Reyting</th><th>Fiyat</th><th>İşlem</th></tr>
-                    </thead>
-                    <tbody id="transfer-table"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- SEKME 4: Tesisler & Stadyum -->
-        <div id="facilities-tab" class="hidden">
-            <div class="card">
-                <h3>🏟️ Stadyum ve Altyapı Tesisleri</h3>
-                <p style="margin-bottom:10px;">Stadyum Kapasitesi: <b id="stadium-val" style="color:var(--primary);">30.000</b> <small>(Her maç bilet geliri sağlar)</small></p>
-                <button class="btn" onclick="upgradeStadium()">🏟️ Stadyumu Genişlet (+10.000 Koltuk / 5M €)</button>
-                <hr style="border-color:var(--border); margin:15px 0;">
-                <p style="margin-bottom:10px;">Altyapı Seviyesi: <b id="academy-level" style="color:var(--accent);">Seviye 1</b></p>
-                <button class="btn btn-warning" onclick="upgradeAcademy()">🎓 Altyapıyı Geliştir (8M €)</button>
-            </div>
-        </div>
-
-        <!-- SEKME 5: Lig Tablosu -->
-        <div id="league-tab" class="hidden">
-            <div class="card">
-                <h3>🏆 Puan Durumu</h3>
-                <table>
-                    <thead>
-                        <tr><th>Takım</th><th>O</th><th>G</th><th>B</th><th>M</th><th>P</th></tr>
-                    </thead>
-                    <tbody id="league-table"></tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>
+<html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dünya Şampiyonası</title>
+<style>
+:root{--bg:#0f1a14;--fg:#f3f7f4;--card:#1c2e24;--acc:#ffd23f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1a14}}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow:hidden;touch-action:none;user-select:none}
+#wrap{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+canvas{width:100%;max-width:960px;aspect-ratio:800/480;background:#2d7a3e;border-radius:10px}
+#ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;background:rgba(10,20,14,.92);text-align:center;padding:16px;gap:10px;overflow:auto;touch-action:pan-y}
+#ov>:first-child{margin-top:auto}#ov>:last-child{margin-bottom:auto}
+#ov h1{margin:0;font-size:26px;color:var(--acc)}
+#ov p{margin:0;opacity:.9;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:420px;width:100%}
+.t{background:var(--card);border:2px solid transparent;border-radius:10px;padding:8px 2px;font-size:12px;color:var(--fg);cursor:pointer}
+.t i{display:block;width:26px;height:26px;border-radius:50%;margin:0 auto 4px;border:2px solid #fff}
+.t:active{border-color:var(--acc)}
+.btn{background:var(--acc);color:#222;border:0;border-radius:24px;padding:12px 26px;font-size:16px;font-weight:700;cursor:pointer}
+.btn.alt{background:var(--card);color:var(--fg)}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.item{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--card);border-radius:12px;padding:8px 12px;width:100%;max-width:380px;font-size:13px;text-align:left;box-sizing:border-box}
+.item button{background:var(--acc);border:0;border-radius:16px;padding:8px 12px;font-weight:700;white-space:nowrap}
+.item button:disabled{opacity:.4}
+.rb{position:absolute;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:70px;height:70px;border-radius:50%;border:3px solid #fff;color:#222;font-weight:800;font-size:14px}
+#pas{right:176px;background:rgba(150,255,160,.85)}#spr.hide~#pas{display:none}#shoot{right:16px;background:rgba(255,210,63,.8)}#spr{right:96px;background:rgba(120,200,255,.8)}
+.hide{display:none!important}
+</style></head><body>
+<div id="wrap">
+<canvas id="c" width="800" height="480"></canvas>
+<button id="spr" class="rb hide">KOŞ</button><button id="pas" class="rb">PAS</button><button id="shoot" class="rb hide">ŞUT</button>
+<div id="ov"></div>
 </div>
-
 <script>
-    const leagueData = {
-        superlig: ["Galatasaray", "Fenerbahçe", "Beşiktaş", "Trabzonspor", "Başakşehir", "Adana Demirspor"],
-        premier: ["Man City", "Arsenal", "Liverpool", "Chelsea", "Man United", "Tottenham"],
-        laliga: ["Real Madrid", "Barcelona", "Atletico Madrid", "Girona", "Athletic Bilbao", "Real Sociedad"],
-        seriea: ["Inter", "AC Milan", "Juventus", "Napoli", "Atalanta", "Roma"],
-        bundesliga: ["Bayern München", "Bayer Leverkusen", "Dortmund", "RB Leipzig", "Stuttgart"],
-        ligue1: ["PSG", "Monaco", "Lille", "Marseille", "Lyon", "Nice"],
-        eredivisie: ["PSV", "Feyenoord", "Ajax", "AZ Alkmaar"],
-        primeira: ["Benfica", "Sporting CP", "Porto", "Braga"],
-        saudi: ["Al-Hilal", "Al-Nassr", "Al-Ittihad", "Al-Ahli"],
-        mls: ["Inter Miami", "LA Galaxy", "Columbus Crew", "LAFC"]
-    };
-
-    const teamSquads = {
-        "Galatasaray": [
-            { no: 10, name: "Berat ⭐", pos: "OS", rating: 90, energy: 100, status: "Hazır" },
-            { no: 11, name: "Niyazi", pos: "SLK", rating: 84, energy: 100, status: "Hazır" },
-            { no: 9, name: "Victor Osimhen", pos: "SNT", rating: 88, energy: 100, status: "Hazır" },
-            { no: 10, name: "Mauro Icardi", pos: "SNT", rating: 83, energy: 100, status: "Hazır" },
-            { no: 1, name: "Fernando Muslera", pos: "KL", rating: 82, energy: 100, status: "Hazır" },
-            { no: 6, name: "Lucas Torreira", pos: "DOS", rating: 82, energy: 100, status: "Hazır" }
-        ],
-        "Fenerbahçe": [
-            { no: 9, name: "Edin Džeko", pos: "SNT", rating: 82, energy: 100, status: "Hazır" },
-            { no: 10, name: "Dusan Tadić", pos: "SLK", rating: 82, energy: 100, status: "Hazır" },
-            { no: 40, name: "Youssef En-Nesyri", pos: "SNT", rating: 81, energy: 100, status: "Hazır" },
-            { no: 40, name: "Dominik Livaković", pos: "KL", rating: 80, energy: 100, status: "Hazır" }
-        ],
-        "Beşiktaş": [
-            { no: 17, name: "Ciro Immobile", pos: "SNT", rating: 82, energy: 100, status: "Hazır" },
-            { no: 27, name: "Rafa Silva", pos: "OS", rating: 83, energy: 100, status: "Hazır" },
-            { no: 83, name: "Gedson Fernandes", pos: "OS", rating: 80, energy: 100, status: "Hazır" }
-        ],
-        "Real Madrid": [
-            { no: 9, name: "Kylian Mbappé", pos: "SNT", rating: 91, energy: 100, status: "Hazır" },
-            { no: 7, name: "Vinícius Jr.", pos: "SLK", rating: 90, energy: 100, status: "Hazır" },
-            { no: 5, name: "Jude Bellingham", pos: "OS", rating: 90, energy: 100, status: "Hazır" },
-            { no: 15, name: "Arda Güler", pos: "OS", rating: 82, energy: 100, status: "Hazır" }
-        ],
-        "Man City": [
-            { no: 9, name: "Erling Haaland", pos: "SNT", rating: 91, energy: 100, status: "Hazır" },
-            { no: 17, name: "Kevin De Bruyne", pos: "OS", rating: 90, energy: 100, status: "Hazır" },
-            { no: 16, name: "Rodri", pos: "DOS", rating: 91, energy: 100, status: "Hazır" }
-        ],
-        "Inter Miami": [
-            { no: 10, name: "Lionel Messi", pos: "SĞK", rating: 88, energy: 100, status: "Hazır" },
-            { no: 9, name: "Luis Suárez", pos: "SNT", rating: 82, energy: 100, status: "Hazır" }
-        ],
-        "Al-Nassr": [
-            { no: 7, name: "Cristiano Ronaldo", pos: "SNT", rating: 86, energy: 100, status: "Hazır" },
-            { no: 10, name: "Sadio Mané", pos: "SLK", rating: 83, energy: 100, status: "Hazır" }
-        ]
-    };
-
-    const defaultSquad = [
-        { no: 10, name: "Kaptan Yıldız", pos: "OS", rating: 84, energy: 100, status: "Hazır" },
-        { no: 9, name: "Golcü Santrafor", pos: "SNT", rating: 83, energy: 100, status: "Hazır" },
-        { no: 7, name: "Hızlı Kanat", pos: "SLK", rating: 81, energy: 100, status: "Hazır" },
-        { no: 1, name: "Güvenilir Kaleci", pos: "KL", rating: 80, energy: 100, status: "Hazır" }
-    ];
-
-    let transferMarket = [
-        { id: 1, name: "Mohamed Salah", pos: "SĞK", rating: 89, price: 28000000 },
-        { id: 2, name: "Harry Kane", pos: "SNT", rating: 90, price: 32000000 },
-        { id: 3, name: "Ferdi Kadıoğlu", pos: "SLB", rating: 81, price: 10000000 }
-    ];
-
-    let myTeam = "";
-    let budget = 25000000;
-    let stadiumCap = 30000;
-    let academyLevel = 1;
-    let currentWeek = 1;
-    let currentTactic = "Dengeli";
-    let teams = [];
-    let squad = [];
-
-    function loadTeams() {
-        const leagueSelect = document.getElementById("league-select");
-        const teamSelect = document.getElementById("team-select");
-        if (!leagueSelect || !teamSelect) return;
-
-        const selectedLeague = leagueSelect.value;
-        teamSelect.innerHTML = "";
-        
-        const currentTeams = leagueData[selectedLeague] || leagueData["superlig"];
-        
-        currentTeams.forEach(team => {
-            const option = document.createElement("option");
-            option.value = team;
-            option.textContent = team;
-            teamSelect.appendChild(option);
-        });
-    }
-
-    function startGame() {
-        const teamSelect = document.getElementById("team-select");
-        if (!teamSelect || !teamSelect.value) {
-            alert("Lütfen bir takım seçin!");
-            return;
-        }
-
-        myTeam = teamSelect.value;
-        const league = document.getElementById("league-select").value;
-        const sponsor = document.getElementById("sponsor-select").value;
-
-        if(sponsor.includes("10M")) budget += 10000000;
-        else if(sponsor.includes("8M")) budget += 8000000;
-        else budget += 7000000;
-
-        if (teamSquads[myTeam]) {
-            squad = JSON.parse(JSON.stringify(teamSquads[myTeam]));
-        } else {
-            squad = JSON.parse(JSON.stringify(defaultSquad));
-        }
-
-        const currentLeagueList = leagueData[league] || leagueData["superlig"];
-        teams = currentLeagueList.map(t => ({ name: t, points: 0, played: 0, won: 0, drawn: 0, lost: 0 }));
-
-        document.getElementById("user-team-name").innerText = myTeam;
-        document.getElementById("sponsor-name").innerText = "Sponsor: " + sponsor.split(" ")[0];
-        document.getElementById("setup-screen").classList.add("hidden");
-        document.getElementById("game-screen").classList.remove("hidden");
-        updateUI();
-    }
-
-    function setTactic(t) {
-        currentTactic = t;
-        document.getElementById("current-tactic").innerText = "Seçili Taktik: " + t;
-    }
-
-    function switchTab(tabId) {
-        ['newspaper-tab', 'squad-tab', 'transfer-tab', 'facilities-tab', 'league-tab'].forEach(id => {
-            const el = document.getElementById(id);
-            if(el) el.classList.add('hidden');
-        });
-        const target = document.getElementById(tabId);
-        if(target) target.classList.remove('hidden');
-
-        document.querySelectorAll('.tab-btn').fo
-        
+const cv=document.getElementById('c'),ctx=cv.getContext('2d'),ov=document.getElementById('ov'),sb=document.getElementById('shoot'),sp2=document.getElementById('spr');
+const W=800,H=480,GY1=185,GY2=295;
+const NAT=[['Türkiye','#e30a17','#fff'],['Brezilya','#ffdf00','#009c3b'],['Almanya','#f2f2f2','#111'],['Arjantin','#75aadb','#fff'],['Fransa','#1d3f9b','#fff'],['İtalya','#1e6fd6','#fff'],['İspanya','#c60b1e','#ffc400'],['Japonya','#1b2a6b','#fff']];
+const CLB=[['Galatasaray','#e30a17','#ffcc00'],['Real Madrid','#f4f4f4','#caa84a'],['Barcelona','#a50044','#004d98'],['Man City','#6cabdd','#fff'],['Bayern','#dc052d','#fff'],['PSG','#004170','#da291c'],['Liverpool','#c8102e','#fff'],['Inter','#0068a8','#111'],['Fenerbahçe','#ffed00','#00205b'],['Beşiktaş','#222','#fff'],['Arsenal','#ef0107','#fff'],['Chelsea','#034694','#fff'],['Man United','#da291c','#fbe122'],['Tottenham','#f4f4f4','#132257'],['Atlético','#cb3524','#fff'],['Athletic','#ee2523','#fff'],['Leverkusen','#e32221','#111'],['Dortmund','#fde100','#111'],['Juventus','#f4f4f4','#111'],['AC Milan','#fb090b','#111'],['Napoli','#12a0d7','#fff'],['Roma','#8e1f2f','#f0bc42'],['Atalanta','#1e71b8','#111'],['Marseille','#2faee0','#fff'],['Monaco','#e51b22','#fff'],['Lyon','#f4f4f4','#1b3a8a'],['Ajax','#f4f4f4','#d2122e'],['PSV','#e2001a','#fff'],['Benfica','#e30613','#fff'],['Porto','#00428c','#fff'],['Sporting','#00a859','#fff'],['Newcastle','#222','#fff']];
+const MODES=[
+{n:'Dünya Kupası',T:NAT,R:['Çeyrek Final','Yarı Final','Final'],gb:5},
+{n:'Şampiyonlar Ligi',T:CLB,R:['Grup Maçı','Son 16','Çeyrek Final','Yarı Final','Final'],gb:9}];
+const STARS=[['Hızlı Kanat','Koşu hızı +',250,'spd'],['Orta Saha Ustası','Koşu hızı +',350,'spd'],['Süper Golcü','Şut gücü +',400,'pow'],['Kaptan','Şut gücü +',500,'pow'],['Duvar Kaleci','Kaleci hızı +',300,'gk'],['Penaltı Kralı','Penaltı şansı +',300,'pen'],
+['⭐ Kylian Mbappé','Koşu hızı +',1400,'spd'],['⭐ Lamine Yamal','Koşu hızı +',1200,'spd'],['⭐ Ousmane Dembélé','Koşu hızı +',1100,'spd'],['⭐ Vinícius Jr.','Koşu hızı +',1200,'spd'],['⭐ Mohamed Salah','Koşu hızı +',1100,'spd'],['⭐ Michael Olise','Koşu hızı +',900,'spd'],['⭐ Pedri','Koşu hızı +',800,'spd'],['⭐ Vitinha','Koşu hızı +',800,'spd'],['⭐ Erling Haaland','Şut gücü +',1500,'pow'],['⭐ Harry Kane','Şut gücü +',1200,'pow'],['⭐ Jude Bellingham','Şut gücü +',1000,'pow'],['⭐ Cristiano Ronaldo','Şut gücü +',900,'pow'],['⭐ Julián Álvarez','Şut gücü +',900,'pow'],['⭐ Lionel Messi','Penaltı şansı +',900,'pen'],['⭐ Bruno Fernandes','Penaltı şansı +',800,'pen']];
+const DN=['Kolay','Normal','Zor'],DM=[.85,1,1.2];
+const GF=['Luca','Mateo','Emre','João','Karim','Diego','Ali','Noah','Hugo','Yusuf','Marco','Leo'],GL=['Silva','Demir','Rossi','Costa','Müller','Haddad','Santos','Kaya','Novak','Ortiz','Weber','Ribeiro'],nm=()=>GF[Math.random()*GF.length|0]+' '+GL[Math.random()*GL.length|0];
+const SQ=[[
+'Uğurcan Çakır|Hakan Çalhanoğlu|Arda Güler|Kenan Yıldız|Kerem Aktürkoğlu|Orkun Kökçü|Ferdi Kadıoğlu|Merih Demiral|Zeki Çelik|Abdülkerim Bardakcı|Mert Müldür|İsmail Yüksek|Barış Alper Yılmaz|Semih Kılıçsoy|Cenk Tosun',
+'Alisson|Vinícius Jr.|Raphinha|Rodrygo|Marquinhos|Casemiro|Bruno Guimarães|Gabriel Magalhães|Lucas Paquetá|Endrick|Matheus Cunha|Éder Militão|Ederson|Gabriel Martinelli|Danilo',
+'Oliver Baumann|Jamal Musiala|Florian Wirtz|Kai Havertz|Joshua Kimmich|Antonio Rüdiger|Leroy Sané|Niclas Füllkrug|İlkay Gündoğan|Nico Schlotterbeck|Jonathan Tah|David Raum|Pascal Groß|Leon Goretzka|Maximilian Beier',
+'Emiliano Martínez|Lionel Messi|Julián Álvarez|Lautaro Martínez|Enzo Fernández|Alexis Mac Allister|Rodrigo De Paul|Cristian Romero|Nicolás Otamendi|Nahuel Molina|Nicolás Tagliafico|Lisandro Martínez|Giovani Lo Celso|Thiago Almada|Nico González',
+'Mike Maignan|Kylian Mbappé|Ousmane Dembélé|Michael Olise|Aurélien Tchouaméni|William Saliba|Theo Hernández|Jules Koundé|Eduardo Camavinga|Dayot Upamecano|Bradley Barcola|Désiré Doué|Marcus Thuram|Warren Zaïre-Emery|Rayan Cherki',
+'Gianluigi Donnarumma|Nicolò Barella|Sandro Tonali|Federico Dimarco|Alessandro Bastoni|Gianluca Scamacca|Mateo Retegui|Federico Chiesa|Giovanni Di Lorenzo|Riccardo Calafiori|Moise Kean|Davide Frattesi|Jorginho|Alessandro Buongiorno|Andrea Cambiaso',
+'Unai Simón|Lamine Yamal|Pedri|Rodri|Nico Williams|Mikel Oyarzabal|Dani Olmo|Fabián Ruiz|Dani Carvajal|Aymeric Laporte|Marc Cucurella|Álex Baena|Martín Zubimendi|Pau Cubarsí|Ferran Torres',
+'Zion Suzuki|Takefusa Kubo|Kaoru Mitoma|Wataru Endo|Takehiro Tomiyasu|Ritsu Doan|Daichi Kamada|Ayase Ueda|Junya Ito|Hiroki Ito|Ao Tanaka|Koki Machida|Yukinari Sugawara|Keito Nakamura|Daizen Maeda'],[
+'Günay Güvenç|Victor Osimhen|Leroy Sané|Mauro Icardi|İlkay Gündoğan|Barış Alper Yılmaz|Lucas Torreira|Davinson Sánchez|Abdülkerim Bardakcı|Wilfried Singo|Ismail Jakobs|Gabriel Sara|Yunus Akgün|Noa Lang|Mario Lemina',
+'Thibaut Courtois|Jude Bellingham|Vinícius Jr.|Kylian Mbappé|Federico Valverde|Aurélien Tchouaméni|Rodrygo|Antonio Rüdiger|Dani Carvajal|Éder Militão|Eduardo Camavinga|Arda Güler|Trent Alexander-Arnold|Dean Huijsen|Franco Mastantuono',
+'Joan García|Lamine Yamal|Pedri|Raphinha|Robert Lewandowski|Gavi|Frenkie de Jong|Ronald Araújo|Jules Koundé|Alejandro Balde|Pau Cubarsí|Fermín López|Dani Olmo|Marcus Rashford|Ferran Torres',
+'Gianluigi Donnarumma|Erling Haaland|Phil Foden|Rodri|Bernardo Silva|Joško Gvardiol|Rúben Dias|Jérémy Doku|Tijjani Reijnders|Rayan Cherki|Nico O’Reilly|Matheus Nunes|Savinho|Marc Guéhi|Omar Marmoush',
+'Manuel Neuer|Harry Kane|Jamal Musiala|Michael Olise|Joshua Kimmich|Luis Díaz|Leon Goretzka|Alphonso Davies|Dayot Upamecano|Kim Min-jae|Konrad Laimer|Serge Gnabry|Aleksandar Pavlović|Jonathan Tah|Hiroki Ito',
+'Lucas Chevalier|Ousmane Dembélé|Vitinha|Achraf Hakimi|Marquinhos|Khvicha Kvaratskhelia|João Neves|Fabián Ruiz|Nuno Mendes|Bradley Barcola|Désiré Doué|Willian Pacho|Warren Zaïre-Emery|Gonçalo Ramos|Senny Mayulu',
+'Alisson|Mohamed Salah|Virgil van Dijk|Florian Wirtz|Alexander Isak|Dominik Szoboszlai|Cody Gakpo|Ryan Gravenberch|Alexis Mac Allister|Ibrahima Konaté|Andy Robertson|Jeremie Frimpong|Milos Kerkez|Hugo Ekitike|Curtis Jones',
+'Yann Sommer|Lautaro Martínez|Marcus Thuram|Nicolò Barella|Hakan Çalhanoğlu|Alessandro Bastoni|Federico Dimarco|Francesco Acerbi|Denzel Dumfries|Henrikh Mkhitaryan|Piotr Zieliński|Benjamin Pavard|Davide Frattesi|Carlos Augusto|Ange-Yoan Bonny',
+'Ederson|Milan Škriniar|Youssef En-Nesyri','Mert Günok|Rafa Silva|Gedson Fernandes','David Raya|Bukayo Saka|Martin Ødegaard','Robert Sánchez|Cole Palmer|Enzo Fernández','André Onana|Bruno Fernandes|Bryan Mbeumo','Guglielmo Vicario|Mohammed Kudus|Dominic Solanke','Jan Oblak|Antoine Griezmann|Julián Álvarez','Unai Simón|Nico Williams|Oihan Sancet','Mark Flekken|Alejandro Grimaldo|Patrik Schick','Gregor Kobel|Serhou Guirassy|Julian Brandt','Michele Di Gregorio|Dušan Vlahović|Kenan Yıldız','Mike Maignan|Rafael Leão|Christian Pulisic','Alex Meret|Scott McTominay|Kevin De Bruyne','Mile Svilar|Paulo Dybala|Lorenzo Pellegrini','Marco Carnesecchi|Ademola Lookman|Mario Pašalić','Gerónimo Rulli|Mason Greenwood|Pierre-Emerick Aubameyang','Philipp Köhn|Takumi Minamino|Folarin Balogun','Lucas Perri|Alexandre Lacazette|Corentin Tolisso','Remko Pasveer|Mika Godts|Kenneth Taylor','Walter Benítez|Luuk de Jong|Johan Bakayoko','Anatoliy Trubin|Ángel Di María|Vangelis Pavlidis','Diogo Costa|Samu Aghehowa|Gabri Veiga','Rui Silva|Geovany Quenda|Maxi Araújo','Nick Pope|Bruno Guimarães|Anthony Gordon']].map(m=>m.map(s=>s.split('|')));
+SQ.forEach(m=>m.forEach(a=>{while(a.length<15)a.push(nm())}));
+let S={coins:0,own:[],cup:0,ucl:0,bd:0,gb:0,goals:0,tp:[]};
+try{Object.assign(S,JSON.parse(localStorage.getItem('dk2')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('dk2',JSON.stringify(S))}catch(e){}};
+let mode=0,diff=1,me=0,opps=[],round=0,tg=0,G=null,keys={},joy={x:0,y:0},shootHeld=false,sprH=false,passH=false,touch=false;
+const bonus=k=>S.own.filter(i=>STARS[i][3]==k).length+S.tp.filter(x=>x.t==k).length;
+let AC;function snd(f,d,t,v){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=t||'square';o.frequency.value=f;g.gain.value=v||.05;o.connect(g);g.connect(AC.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);o.stop(AC.currentTime+d)}catch(e){}}
+function show(h){ov.classList.remove('hide');sb.classList.add('hide');sp2.classList.add('hide');ov.innerHTML=h}
+function home(){
+ G=null;
+ show(`<h1>⚽ Dünya Şampiyonası</h1><p>💰 ${S.coins} altın · ⚽ ${S.goals} gol</p><p>🏆 ${S.cup} · ⭐ ${S.ucl} · 👟 ${S.gb} · 🥇 ${S.bd}</p>
+ <button class="btn" data-m="0">Dünya Kupası</button><button class="btn" data-m="1">Şampiyonlar Ligi</button>
+ <div class="row"><button class="btn alt" id="shop">🛒 Mağaza</button><button class="btn alt" id="tm">🔁 Transfer</button><button class="btn alt" id="df">Zorluk: ${DN[diff]}</button></div>
+ <p>Ok/WASD = hareket · Boşluk = şut · E = pas · Shift = koş<br>🏆 Dünya Kupası · ⭐ Şampiyonlar Ligi · 👟 Altın Ayakkabı · 🥇 Ballon d’Or</p>`);
+ ov.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{mode=+b.dataset.m;pick()});
+ document.getElementById('shop').onclick=shop;document.getElementById('tm').onclick=market;
+ document.getElementById('df').onclick=()=>{diff=(diff+1)%3;home()};
+}
+function shop(){
+ show(`<h1>🛒 Mağaza</h1><p>💰 ${S.coins} altın</p>`+STARS.map((s,i)=>`<div class="item"><span><b>${s[0]}</b><br>${s[1]}</span><button data-i="${i}" ${S.own.includes(i)||S.coins<s[2]?'disabled':''}>${S.own.includes(i)?'Sahipsin':s[2]+' 💰'}</button></div>`).join('')+'<button class="btn" id="bk">Geri</button>');
+ ov.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(S.coins>=STARS[i][2]&&!S.own.includes(i)){S.coins-=STARS[i][2];S.own.push(i);save();snd(800,.2);shop()}});
+ document.getElementById('bk').onclick=home;
+}
+function pick(){
+ const M=MODES[mode];
+ show(`<h1>${M.n}</h1><p>Takımını seç</p><div class="grid">`+M.T.map((t,i)=>`<button class="t" data-i="${i}"><i style="background:${t[1]}"></i>${t[0]}</button>`).join('')+'</div><button class="btn alt" id="bk">Geri</button>');
+ ov.querySelectorAll('.t').forEach(b=>b.onclick=()=>{me=+b.dataset.i;opps=M.T.map((_,i)=>i).filter(i=>i!=me).sort(()=>Math.random()-.5).slice(0,M.R.length);round=0;tg=0;squad()});
+ document.getElementById('bk').onclick=home;
+}
+function out(k){
+ const b=G.ball,P=G.p,last=G.last;let team,x,y,m;
+ if(k=='aut'){team=1-last;x=Math.max(40,Math.min(W-40,b.x));y=b.y<H/2?10:H-10;m='AUT'}
+ else{const left=k=='x0',def=left?0:1;
+  if(last==def){team=1-def;x=left?10:W-10;y=b.y<H/2?10:H-10;m='KORNER'}
+  else{team=def;x=left?60:W-60;y=H/2;m='KALE VURUŞU'}}
+ b.x=x;b.y=y;b.vx=0;b.vy=0;
+ const c=P.filter(q=>q.team==team&&q.role==(m=='KALE VURUŞU'?'k':'f')).reduce((a,q)=>dist(q,b)<dist(a,b)?q:a);
+ c.x=x<W/2?x+14:x-14;c.y=m=='KALE VURUŞU'?y:y+(y<H/2?14:-14);c.vx=c.vy=0;
+ G.pause=50;G.msg=m;snd(500,.15,'sine');
+}
+let MK=null;
+const POS={spd:'Kanat',pow:'Forvet',gk:'Kaleci',pen:'Penaltıcı'},DSC={spd:'Hız +',pow:'Şut gücü +',gk:'Kaleci hızı +',pen:'Penaltı +'};
+function genMk(){MK=[];for(let i=0;i<8;i++){const t=['spd','pow','gk','pen'][Math.random()*4|0],r=60+Math.random()*35|0;MK.push({n:nm(),t,r,pr:Math.round(r*r/100)*5})}}
+function market(){
+ if(!MK)genMk();
+ show(`<h1>🔁 Transfer Pazarı</h1><p>💰 ${S.coins} altın · Kadro: ${S.tp.length}/5</p>`+MK.map((m,i)=>`<div class="item"><span><b>${m.n}</b> (${m.r})<br>${POS[m.t]} · ${DSC[m.t]}</span><button data-b="${i}" ${S.coins<m.pr||S.tp.length>=5?'disabled':''}>${m.pr} 💰</button></div>`).join('')+'<p>Senin transferlerin:</p>'+(S.tp.length?S.tp.map((m,i)=>`<div class="item"><span><b>${m.n}</b> (${m.r})<br>${POS[m.t]} · ${DSC[m.t]}</span><button data-s="${i}">Sat ${Math.round(m.pr*.6)} 💰</button></div>`).join(''):'<p>Henüz yok</p>')+'<div class="row"><button class="btn alt" id="rf">Yenile (50 💰)</button><button class="btn" id="bk">Geri</button></div>');
+ ov.querySelectorAll('[data-b]').forEach(x=>x.onclick=()=>{const m=MK[+x.dataset.b];if(S.coins>=m.pr&&S.tp.length<5){S.coins-=m.pr;S.tp.push(MK.splice(+x.dataset.b,1)[0]);save();snd(800,.2);market()}});
+ ov.querySelectorAll('[data-s]').forEach(x=>x.onclick=()=>{const m=S.tp.splice(+x.dataset.s,1)[0];S.coins+=Math.round(m.pr*.6);save();market()});
+ document.getElementById('rf').onclick=()=>{if(S.coins>=50){S.coins-=50;genMk();save();market()}};
+ document.getElementById('bk').onclick=home;
+}
+let selSlot=-1;
+function lineup(m,t){let a=S.lu&&S.lu[m+'-'+t];if(!a||a.length!=15)a=[...Array(15).keys()];return a}
+function rate(m,t,oi){const n=SQ[m][t][oi];let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))>>>0;const b=oi<5?10:0;return{s:Math.min(99,55+h%36+b),t:Math.min(99,55+(h>>>8)%36+b)}}
+function squad(){
+ const M=MODES[mode],a=lineup(mode,me);
+ show(`<h1>${M.T[me][0]} Kadrosu</h1><p>İki oyuncuya dokunup yerlerini değiştir. İlk 3 sahada: 1. kaleci, 2-3 saha oyuncusu.</p><div id="sl" style="width:100%;display:flex;flex-direction:column;align-items:center;gap:6px"></div><div class="row"><button class="btn" id="go">Maça Başla</button><button class="btn alt" id="bk">Geri</button></div>`);
+ const L=document.getElementById('sl');
+ a.forEach((oi,s)=>{const r=rate(mode,me,oi),d=document.createElement('div');d.className='item';d.style.cssText='cursor:pointer;'+(s==selSlot?'outline:2px solid #ffd23f;':'')+(s<3?'border-left:4px solid #ffd23f;':'');
+  d.innerHTML=`<span><b>${s+1}. ${SQ[mode][me][oi]}</b><br>${s==0?'Kaleci':s<3?'Sahada':'Yedek'}</span><span>Hız ${r.s} · Şut ${r.t}</span>`;
+  d.onclick=()=>{if(selSlot<0)selSlot=s;else{[a[selSlot],a[s]]=[a[s],a[selSlot]];S.lu=S.lu||{};S.lu[mode+'-'+me]=a;save();selSlot=-1}squad()};L.appendChild(d)});
+ document.getElementById('go').onclick=()=>{selSlot=-1;start()};document.getElementById('bk').onclick=()=>{selSlot=-1;pick()};
+}
+function mk(team,x,y,role){return{x,y,vx:0,vy:0,team,role,hx:x,hy:y,fx:team?-1:1,fy:0}}
+function reset(){
+ const P=G.p;P.length=0;
+ P.push(mk(0,28,H/2,'k'),mk(0,260,150,'f'),mk(0,260,330,'f'),mk(1,W-28,H/2,'k'),mk(1,W-260,150,'f'),mk(1,W-260,330,'f'));
+ G.ball={x:W/2,y:H/2,vx:0,vy:0};G.pause=70;G.ctl=1;
+}
+function start(){
+ ov.classList.add('hide');if(touch){sb.classList.remove('hide');sp2.classList.remove('hide')}
+ G={p:[],s:[0,0],sh:[0,0],t:3600,over:false,round,opp:opps[round],msg:MODES[mode].R[round],cd:0,en:100,pen:null,hist:[],last:0};
+ const la=lineup(mode,me);G.rt=[la.slice(0,3).map(oi=>rate(mode,me,oi)),[0,1,2].map(oi=>rate(mode,G.opp,oi))];G.nm=[la.slice(0,3).map(oi=>SQ[mode][me][oi]),[0,1,2].map(oi=>SQ[mode][G.opp][oi])];
+ reset();loop();snd(600,.4,'sine');
+}
+function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
+function step(){
+ const b=G.ball,P=G.p,dm=DM[diff],lvl=(1+G.round*.12)*dm;
+ if(G.pause>0){G.pause--;if(G.pause==0)G.msg='';return}
+ let best=1,bd=1e9;for(let i=1;i<3;i++){const d=dist(P[i],b);if(d<bd){bd=d;best=i}}
+ G.ctl=best;G.hist.push({b:[b.x,b.y],p:P.map(p=>[p.x,p.y,p.fx,p.fy])});if(G.hist.length>130)G.hist.shift();
+ let ix=(keys.ArrowRight||keys.d?1:0)-(keys.ArrowLeft||keys.a?1:0)+joy.x,iy=(keys.ArrowDown||keys.s?1:0)-(keys.ArrowUp||keys.w?1:0)+joy.y;
+ const il=Math.hypot(ix,iy);if(il>1){ix/=il;iy/=il}
+ const wantS=sprH||keys.Shift;let sprinting=false;
+ P.forEach((p,i)=>{
+  let tx=0,ty=0,sp=2.7;
+  if(p.team==0&&i==G.ctl){
+   tx=ix;ty=iy;sp=2.9+.35*bonus('spd');
+   if(wantS&&G.en>0&&il>.2){sp*=1.45;G.en-=1.2;sprinting=true}
+  }else if(p.role=='k'){
+   const dy=Math.max(GY1+8,Math.min(GY2-8,b.y))-p.y;
+   ty=Math.abs(dy)>3?Math.sign(dy):0;sp=p.team?2.2*lvl:2.2+.5*bonus('gk');
+  }else{
+   const mates=P.filter(q=>q.team==p.team&&q.role=='f');
+   const mine=mates.reduce((a,q)=>dist(q,b)<dist(a,b)?q:a);
+   const gx=p.team?0:W;
+   sp=p.team?(2.2+.15*G.round)*dm:2.5+.2*bonus('spd');
+   let px,py;
+   if(mine===p){
+    const ang=Math.atan2(H/2-b.y,gx-b.x);px=b.x-Math.cos(ang)*8;py=b.y-Math.sin(ang)*8;
+    if(dist(p,b)<40){px=b.x;py=b.y}
+    if(p.team==1&&Math.abs(b.x-gx)<260&&dist(p,b)<22&&G.cd<=0&&Math.random()<.05*dm){
+     const a2=Math.atan2(H/2+(Math.random()-.5)*90-b.y,gx-b.x);b.vx=Math.cos(a2)*12;b.vy=Math.sin(a2)*12;G.cd=20;G.sh[1]++;snd(250,.1)}
+   }else{
+    const side=p.hy<H/2?-1:1;px=p.hx+(b.x-W/2)*.5;py=H/2+side*110+(b.y-H/2)*.3;
+    px=Math.max(80,Math.min(W-80,px));
+   }
+   const dx=px-p.x,dy=py-p.y,d=Math.hypot(dx,dy);if(d>3){tx=dx/d;ty=dy/d}
+  }
+  sp*=1+(G.rt[p.team][i%3].s-75)/150;
+  p.vx=p.vx*.7+tx*sp*.3;p.vy=p.vy*.7+ty*sp*.3;
+  p.x+=p.vx;p.y+=p.vy;
+  if(Math.hypot(tx,ty)>.2){p.fx=tx;p.fy=ty}
+  if(p.role=='k')p.x=p.team?W-28:28;
+  p.x=Math.max(12,Math.min(W-12,p.x));p.y=Math.max(12,Math.min(H-12,p.y));
+ });
+ if(!sprinting)G.en=Math.min(100,G.en+.4);
+ G.cd--;
+ if((keys.e||passH)&&G.cd<=0){const p=P[G.ctl],q=P[3-G.ctl];if(dist(p,b)<30){const dx=q.x-b.x,dy=q.y-b.y,l=Math.hypot(dx,dy)||1;b.vx=dx/l*9;b.vy=dy/l*9;G.cd=20;G.last=0;snd(260,.08)}}
+ if(shootHeld&&G.cd<=0){const p=P[G.ctl];if(dist(p,b)<28){const l=Math.hypot(p.fx,p.fy)||1,pw=(13+2*bonus('pow'))*(1+(G.rt[0][G.ctl].t-75)/150);b.vx=p.fx/l*pw;b.vy=p.fy/l*pw;G.cd=20;G.sh[0]++;snd(320,.1)}}
+ P.forEach(p=>{
+  const d=dist(p,b),R=p.role=='k'?15:12;
+  if(d<R+7&&d>0){
+   G.last=p.team;const nx=(b.x-p.x)/d,ny=(b.y-p.y)/d;
+   b.x=p.x+nx*(R+7);b.y=p.y+ny*(R+7);
+   const sp=Math.hypot(p.vx
